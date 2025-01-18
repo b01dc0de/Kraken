@@ -50,4 +50,13 @@ namespace Utils
 	void WriteBMPTest(const char* OutFilename);
 }
 
+using Utils::u8;
+using Utils::u16;
+using Utils::u32;
+using Utils::u64;
+using Utils::s8;
+using Utils::s16;
+using Utils::s32;
+using Utils::s64;
+
 #endif // UTILS_H
