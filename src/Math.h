@@ -1,7 +1,7 @@
 #ifndef MATH_H
 #define MATH_H
 
-namespace Math
+namespace Kraken
 {
 	struct v2f
 	{
@@ -104,12 +104,5 @@ namespace Math
 	m3f Mult(const m3f& Left, const m3f& Right);
 	m4f Mult(const m4f& Left, const m4f& Right);
 }
-
-using Math::v2f;
-using Math::v3f;
-using Math::v4f;
-using Math::m2f;
-using Math::m3f;
-using Math::m4f;
 
 #endif // MATH_H

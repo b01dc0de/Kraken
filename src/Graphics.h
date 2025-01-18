@@ -3,7 +3,7 @@
 
 #include "Kraken.h"
 
-namespace Graphics_DX11
+namespace Kraken
 {
 	struct VertexColor
 	{
@@ -22,6 +22,20 @@ namespace Graphics_DX11
 		m4f World;
 		m4f View;
 		m4f Proj;
+	};
+
+	struct Camera
+	{
+		m4f View;
+		m4f Proj;
+		void Ortho(float FrameResX, float FrameResY, float fDepth = 1.0f)
+		{
+			View = m4f::Identity();
+			Proj = m4f::Identity();
+			Proj.r0.X = +2.0f / FrameResX;
+			Proj.r1.Y = +2.0f / FrameResY;
+			View.r2.Z = -2.0f / fDepth;
+		}
 	};
 	
 	int CompileShaderHelper(LPCWSTR SourceFileName, LPCSTR EntryPointFunction, LPCSTR Profile, ID3DBlob** ShaderBlob, const D3D_SHADER_MACRO* Defines = nullptr);

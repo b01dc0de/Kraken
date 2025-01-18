@@ -1,7 +1,7 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-namespace Utils
+namespace Kraken
 {
     using u8 = unsigned char;
     using u16 = unsigned short;
@@ -49,14 +49,5 @@ namespace Utils
 
 	void WriteBMPTest(const char* OutFilename);
 }
-
-using Utils::u8;
-using Utils::u16;
-using Utils::u32;
-using Utils::u64;
-using Utils::s8;
-using Utils::s16;
-using Utils::s32;
-using Utils::s64;
 
 #endif // UTILS_H

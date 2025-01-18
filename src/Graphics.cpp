@@ -4,7 +4,7 @@
 #define DXCHECK(Result) if (FAILED(Result)) { return -1; }
 #define DXCHECKMSG(Result, Msg) if (FAILED(Result)) { OutputDebugStringA((Msg)); return -1; }
 
-namespace Graphics_DX11
+namespace Kraken
 {
 	IDXGISwapChain* DX_SwapChain = nullptr;
 	ID3D11Device* DX_Device = nullptr;
@@ -97,9 +97,9 @@ namespace Graphics_DX11
 
 	VertexColor Vertices_Triangle[] =
 	{
-		{{0.0f, 0.5f, 0.5f, 1.0f}, {0.0f, 0.0f, 1.0f, 1.0f}},
-		{{0.5f, -0.5f, 0.5f, 1.0f}, {1.0f, 0.0f, 0.0f, 1.0f}},
-		{{-0.5f, -0.5f, 0.5f, 1.0f}, {0.0f, 1.0f, 0.0f, 1.0f}}
+		{{0.0f, 0.5f, 0.0f, 1.0f}, {0.0f, 0.0f, 1.0f, 1.0f}},
+		{{0.5f, -0.5f, 0.0f, 1.0f}, {1.0f, 0.0f, 0.0f, 1.0f}},
+		{{-0.5f, -0.5f, 0.0f, 1.0f}, {0.0f, 1.0f, 0.0f, 1.0f}}
 	};
     UINT Indices_Triangle[] =
 	{
@@ -108,10 +108,10 @@ namespace Graphics_DX11
 
 	VertexTexture Vertices_Quad[]
 	{
-		{{-0.5f, +0.5f, +0.5f, +1.0f}, {+0.0f, +0.0f}},
-		{{+0.5f, +0.5f, +0.5f, +1.0f}, {+1.0f, +0.0f}},
-		{{-0.5f, -0.5f, +0.5f, +1.0f}, {+0.0f, +1.0f}},
-		{{+0.5f, -0.5f, +0.5f, +1.0f}, {+1.0f, +1.0f}},
+		{{-0.5f, +0.5f, +0.0f, +1.0f}, {+0.0f, +0.0f}},
+		{{+0.5f, +0.5f, +0.0f, +1.0f}, {+1.0f, +0.0f}},
+		{{-0.5f, -0.5f, +0.0f, +1.0f}, {+0.0f, +1.0f}},
+		{{+0.5f, -0.5f, +0.0f, +1.0f}, {+1.0f, +1.0f}},
 	};
     UINT Indices_Quad[] =
 	{
@@ -316,8 +316,8 @@ namespace Graphics_DX11
 
         // DebugTexture
         {
-            Utils::Image32 BMPImage = {};
-			Utils::GetDebugBMP(BMPImage);
+            Image32 BMPImage = {};
+			GetDebugBMP(BMPImage);
 
             D3D11_SUBRESOURCE_DATA DebugTexDataDesc[] = { {} };
             DebugTexDataDesc[0].pSysMem = BMPImage.PixelBuffer;
@@ -404,7 +404,12 @@ namespace Graphics_DX11
             { 0.0f, 0.0f, 1.0f, 0.0f },
             { 0.0f, 0.0f, 0.0f, 1.0f },
         };
-        WVPData WVP_Trans = { IdentityMatrix, IdentityMatrix, IdentityMatrix };
+		Camera OrthoCam;
+		OrthoCam.Ortho(WinResX, WinResY, 1.0f);
+		m4f World = m4f::Scale(v3f{ WinResX / 4.0f, WinResY / 4.0f, 1.0f });
+		WVPData WVP_Trans = { World, OrthoCam.View, OrthoCam.Proj };
+		//WVPData WVP_Trans = { World, m4f::Identity(), OrthoCam.Proj};
+
         constexpr int WVPBufferSlot = 0;
         DX_ImmediateContext->UpdateSubresource(DX_WVPBuffer, 0, nullptr, &WVP_Trans, sizeof(WVPData), 0);
 

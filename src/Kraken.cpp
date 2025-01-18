@@ -95,7 +95,7 @@ int WINAPI Kraken_WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR CmdLine, in
 	{
 		hWindow = hWnd;
 
-		HRESULT Result = Graphics_DX11::InitGraphics();
+		HRESULT Result = Kraken::InitGraphics();
 		if (Result != S_OK)
 		{
 			DebugBreak();
@@ -108,7 +108,7 @@ int WINAPI Kraken_WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR CmdLine, in
 		{
 			Kraken_WindowMsgLoop(hWindow);
 			UpdateWindow(hWindow);
-			Graphics_DX11::Draw();
+			Kraken::Draw();
 		}
 	}
 

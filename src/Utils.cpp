@@ -1,6 +1,6 @@
 #include "Kraken.h"
 
-namespace Utils
+namespace Kraken
 {
 #pragma pack(push, 1)
 	struct BMPFileHeader

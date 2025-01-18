@@ -1,6 +1,6 @@
 #include "Kraken.h" // NOTE(CKA): Math.h included
 
-namespace Math
+namespace Kraken
 {
     v2f operator+(const v2f& Left, const v2f& Right)
     {
