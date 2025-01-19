@@ -64,6 +64,8 @@ namespace Kraken
                 Keys[KeyIdx].VKCode = Keys[KeyIdx + 1].VKCode;
                 KeyIdx++;
             }
+            Keys[KeyIdx].VKCode = 0;
+
             KeysPressed--;
         }
     }
