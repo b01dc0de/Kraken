@@ -12,13 +12,8 @@
 #include <d3dcompiler.h>
 #include <dxgi.h>
 
-// Globals
-extern bool bRunning;
-extern HWND hWindow;
-extern UINT WinResX;
-extern UINT WinResY;
-
 // Common Kraken headers
+#include "Engine.h"
 #include "Math.h"
 #include "Utils.h"
 

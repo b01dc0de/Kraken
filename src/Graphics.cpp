@@ -38,7 +38,6 @@ namespace Kraken
 
 	ID3D11Buffer* DX_WVPBuffer = nullptr;
 
-
 	int CompileShaderHelper
 	(
 		LPCWSTR SourceFileName,
@@ -264,6 +263,8 @@ namespace Kraken
             {
                 "ENABLE_VERTEX_COLOR", "1",
                 "ENABLE_VERTEX_TEXTURE", "0",
+				"ENABLE_WVP_TRANSFORM", "1",
+				"COMBINED_WVP_BUFFER", "1",
                 NULL, NULL
             };
             Result = CompileShaderHelper(L"src/hlsl/BaseShader.hlsl", "VSMain", "vs_5_0", &VSCodeBlob, VxColorDefines);
@@ -318,6 +319,7 @@ namespace Kraken
         {
             Image32 BMPImage = {};
 			GetDebugBMP(BMPImage);
+			//ReadBMP("Assets/DebugTexture.bmp", BMPImage);
 
             D3D11_SUBRESOURCE_DATA DebugTexDataDesc[] = { {} };
             DebugTexDataDesc[0].pSysMem = BMPImage.PixelBuffer;
@@ -363,6 +365,8 @@ namespace Kraken
             {
                 "ENABLE_VERTEX_COLOR", "0",
                 "ENABLE_VERTEX_TEXTURE", "1",
+				"ENABLE_WVP_TRANSFORM", "1",
+				"COMBINED_WVP_BUFFER", "1",
                 NULL, NULL
             };
             Result = CompileShaderHelper(L"src/hlsl/BaseShader.hlsl", "VSMain", "vs_5_0", &VSCodeBlob, VxTextureDefines);
@@ -408,7 +412,6 @@ namespace Kraken
 		OrthoCam.Ortho(WinResX, WinResY, 1.0f);
 		m4f World = m4f::Scale(v3f{ WinResX / 4.0f, WinResY / 4.0f, 1.0f });
 		WVPData WVP_Trans = { World, OrthoCam.View, OrthoCam.Proj };
-		//WVPData WVP_Trans = { World, m4f::Identity(), OrthoCam.Proj};
 
         constexpr int WVPBufferSlot = 0;
         DX_ImmediateContext->UpdateSubresource(DX_WVPBuffer, 0, nullptr, &WVP_Trans, sizeof(WVPData), 0);
@@ -451,9 +454,10 @@ namespace Kraken
 
     void Draw()
     {
-        float ClearColor[4] = { 0.125f, 0.175f, 0.3f, 1.0f };
+        //float ClearColor[4] = { 0.125f, 0.175f, 0.3f, 1.0f };
+		v4f ClearColor = { 28.0f / 255.0f, 49.0f / 255.0f, 60.0f / 255.0f, 1.0f };
         float fDepth = 1.0f;
-        DX_ImmediateContext->ClearRenderTargetView(DX_RenderTargetView, ClearColor);
+        DX_ImmediateContext->ClearRenderTargetView(DX_RenderTargetView, &ClearColor.X);
         DX_ImmediateContext->ClearDepthStencilView(DX_DepthStencilView, D3D11_CLEAR_DEPTH, fDepth, 0);
 
         UpdateAndDraw();
