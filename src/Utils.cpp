@@ -2,6 +2,17 @@
 
 namespace Kraken
 {
+	void Outf(const char* Fmt, ...)
+	{
+		constexpr size_t OutfBuffSz = 1024;
+		char OutfBuffer[OutfBuffSz];
+		va_list args;
+		va_start(args, Fmt);
+		vsprintf_s(OutfBuffer, OutfBuffSz, Fmt, args);
+		va_end(args);
+		OutputDebugStringA(OutfBuffer);
+	}
+
 #pragma pack(push, 1)
 	struct BMPFileHeader
 	{

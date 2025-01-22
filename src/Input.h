@@ -22,6 +22,11 @@ namespace Kraken
 
     struct MouseState
     {
+        static constexpr int OffscreenVal = -1;
+        static int MouseX;
+        static int MouseY;
+
+        static void SetMousePos(int X, int Y);
     };
 }
 

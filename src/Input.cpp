@@ -70,4 +70,23 @@ namespace Kraken
         }
     }
 
+    int MouseState::MouseX = MouseState::OffscreenVal;
+    int MouseState::MouseY = MouseState::OffscreenVal;
+
+    void MouseState::SetMousePos(int X, int Y)
+    {
+        bool bOnscreenX = 0 < X && X < WinResX;
+        bool bOnscreenY = 0 < Y && Y < WinResY;
+
+        if (bOnscreenX && bOnscreenY)
+        {
+            MouseX = X;
+            MouseY = Y;
+        }
+        else
+        {
+            MouseX = OffscreenVal;
+            MouseY = OffscreenVal;
+        }
+    }
 }

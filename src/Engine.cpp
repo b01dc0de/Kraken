@@ -72,6 +72,10 @@ namespace Kraken
             {
                 bRunning = false;
             } break;
+            case WM_MOUSEMOVE:
+            {
+                MouseState::SetMousePos(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+            } break;
             default:
             {
                 Result = DefWindowProc(hwnd, uMsg, wParam, lParam);

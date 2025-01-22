@@ -3,6 +3,8 @@
 
 namespace Kraken
 {
+	void Outf(const char* Fmt, ...);
+
     using u8 = unsigned char;
     using u16 = unsigned short;
     using u32 = unsigned int;
