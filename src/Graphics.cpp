@@ -6,7 +6,7 @@
 
 namespace Kraken
 {
-	IDXGISwapChain* DX_SwapChain = nullptr;
+	IDXGISwapChain1* DX_SwapChain1 = nullptr;
 	ID3D11Device* DX_Device = nullptr;
 	D3D_FEATURE_LEVEL UsedFeatureLevel;
 	ID3D11DeviceContext* DX_ImmediateContext = nullptr;
@@ -14,7 +14,7 @@ namespace Kraken
 	ID3D11Texture2D* DX_BackBuffer = nullptr;
 	ID3D11RenderTargetView* DX_RenderTargetView = nullptr;
 
-	IDXGIFactory1* DX_Factory = nullptr;
+	IDXGIFactory2* DX_Factory2 = nullptr;
 
 	ID3D11RasterizerState* DX_RasterizerState = nullptr;
 	ID3D11Texture2D* DX_DepthStencil = nullptr;
@@ -118,6 +118,8 @@ namespace Kraken
         1, 2, 3
 	};
 
+#define UID_HELPER(Type, pCOM) __uuidof(Type), (void**)&pCOM
+
 	int InitGraphics()
 	{
 		HRESULT Result = S_OK;
@@ -131,47 +133,59 @@ namespace Kraken
 		D3D_FEATURE_LEVEL D3DFeatureLevel = D3D_FEATURE_LEVEL_11_0;
 		(void)D3DFeatureLevel;
 
-		CreateDXGIFactory1(__uuidof(IDXGIFactory), (void**)&DX_Factory);
-
-		DXGI_SAMPLE_DESC SharedSampleDesc = {};
-		SharedSampleDesc.Count = 4;
-		SharedSampleDesc.Quality = (UINT)D3D11_STANDARD_MULTISAMPLE_PATTERN;
-
-		UINT FrameRefreshRate = 60;
-		DXGI_SWAP_CHAIN_DESC swapchain_desc = {};
-		swapchain_desc.BufferCount = 2;
-		swapchain_desc.BufferDesc.Width = WinResX;
-		swapchain_desc.BufferDesc.Height = WinResY;
-		swapchain_desc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		swapchain_desc.BufferDesc.RefreshRate.Numerator = FrameRefreshRate;
-		swapchain_desc.BufferDesc.RefreshRate.Denominator = 1;
-		swapchain_desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-		swapchain_desc.OutputWindow = hWindow;
-		swapchain_desc.SampleDesc = SharedSampleDesc;
-		swapchain_desc.Windowed = true;
+		CreateDXGIFactory1(UID_HELPER(IDXGIFactory2, DX_Factory2));
 
 		UINT CreateDeviceFlags = 0;
 	#ifdef _DEBUG
 		CreateDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 	#endif
 
-		Result = D3D11CreateDeviceAndSwapChain(
-			nullptr,					//IDXGIAdapter* pAdapter
-			D3D_DRIVER_TYPE_HARDWARE,	//D3D_DRIVER_TYPE DriverType
-			nullptr,					//HMODULE Software
-			CreateDeviceFlags,			//UINT Flags
-			SupportedFeatureLevels,		//const D3D_FEATURE_LEVEL* pFeatureLevels
-			NumSupportedFeatureLevels,	//UINT FeatureLevels
-			D3D11_SDK_VERSION,			//UINT SDKVersion
-			&swapchain_desc,			//const DXGI_SWAP_CHAIN_DESC* pSwapChainDesc
-			&DX_SwapChain,
+		Result = D3D11CreateDevice
+		(
+			nullptr,
+			D3D_DRIVER_TYPE_HARDWARE,
+			nullptr,
+			CreateDeviceFlags,
+			SupportedFeatureLevels,
+			NumSupportedFeatureLevels,
+			D3D11_SDK_VERSION,
 			&DX_Device,
 			&UsedFeatureLevel,
 			&DX_ImmediateContext
 		);
 		DXCHECK(Result);
 
-		Result = DX_SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&DX_BackBuffer);
+		DXGI_SAMPLE_DESC SampleDesc = {};
+		SampleDesc.Count = 1;
+		SampleDesc.Quality = 0;
+
+		UINT FrameRefreshRate = 60;
+
+		DXGI_SWAP_CHAIN_DESC1 SwapchainDesc1 = {};
+        SwapchainDesc1.Width = WinResX;
+        SwapchainDesc1.Height = WinResY;
+        SwapchainDesc1.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+        SwapchainDesc1.Stereo = FALSE;
+        SwapchainDesc1.SampleDesc = SampleDesc;
+        SwapchainDesc1.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+        SwapchainDesc1.BufferCount = 2;
+        SwapchainDesc1.Scaling = DXGI_SCALING_STRETCH; // DXGI_SCALING_NONE
+        SwapchainDesc1.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+        SwapchainDesc1.AlphaMode = DXGI_ALPHA_MODE_UNSPECIFIED; // DXGI_ALPHA_MODE_IGNORE
+        SwapchainDesc1.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING;
+
+		Result = DX_Factory2->CreateSwapChainForHwnd
+		(
+			DX_Device,
+			hWindow,
+			&SwapchainDesc1,
+			nullptr,
+			nullptr,
+			&DX_SwapChain1
+		);
+		DXCHECK(Result);
+
+		Result = DX_SwapChain1->GetBuffer(0, UID_HELPER(ID3D11Texture2D, DX_BackBuffer));
 		DXCHECK(Result);
 
 		Result = DX_Device->CreateRenderTargetView(DX_BackBuffer, nullptr, &DX_RenderTargetView);
@@ -197,7 +211,7 @@ namespace Kraken
 		DepthDesc.MipLevels = 1;
 		DepthDesc.ArraySize = 1;
 		DepthDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-		DepthDesc.SampleDesc = SharedSampleDesc;
+		DepthDesc.SampleDesc = SampleDesc;
 		DepthDesc.Usage = D3D11_USAGE_DEFAULT;
 		DepthDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 		DepthDesc.CPUAccessFlags = 0;
@@ -454,6 +468,7 @@ namespace Kraken
 
     void Draw()
     {
+		DX_ImmediateContext->OMSetRenderTargets(1, &DX_RenderTargetView, DX_DepthStencilView);
         //float ClearColor[4] = { 0.125f, 0.175f, 0.3f, 1.0f };
 		v4f ClearColor = { 28.0f / 255.0f, 49.0f / 255.0f, 60.0f / 255.0f, 1.0f };
         float fDepth = 1.0f;
@@ -462,6 +477,9 @@ namespace Kraken
 
         UpdateAndDraw();
 
-        DX_SwapChain->Present(0, 0);
+		UINT SyncInterval = 0;
+		UINT PresentFlags = 0;
+		DXGI_PRESENT_PARAMETERS PresentParams = {};
+        DX_SwapChain1->Present1(SyncInterval, PresentFlags, &PresentParams);
     }
 }

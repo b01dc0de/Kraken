@@ -27,7 +27,7 @@ namespace Kraken
 	{
 		u32 StructSize; // Size (bytes) of InfoHeader
 		s32 Width;
-		s32 Height; // NOTE(chris): If positive, pixel data is bottom to top
+		s32 Height; // NOTE(CKA): If positive, pixel data is bottom to top
 		u16 Planes; // Must be 1
 		u16 BitsPerPixel; // Bits-per-pixel (0, 1, 4, 8, 16, 24, 32)
 		u32 Compression; // *Should* be 0
