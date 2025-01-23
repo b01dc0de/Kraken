@@ -134,6 +134,6 @@ namespace Kraken
 
     void Engine::Term()
     {
-
+        TermGraphics();
     }
 }

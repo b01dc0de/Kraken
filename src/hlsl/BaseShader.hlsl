@@ -5,16 +5,16 @@
 #pragma pack_matrix(row_major)
 
 #ifndef ENABLE_VERTEX_COLOR
-    #define ENABLE_VERTEX_COLOR (0)
+#define ENABLE_VERTEX_COLOR (0)
 #endif // ENABLE_VERTEX_COLOR
 #ifndef ENABLE_VERTEX_TEXTURE
-    #define ENABLE_VERTEX_TEXTURE (0)
+#define ENABLE_VERTEX_TEXTURE (0)
 #endif // ENABLE_VERTEX_TEXTURE
 #ifndef ENABLE_WVP_TRANSFORM
-    #define ENABLE_WVP_TRANSFORM (1)
+#define ENABLE_WVP_TRANSFORM (1)
 #endif // ENABLE_WVP_TRANSFORM
 #ifndef COMBINED_WVP_BUFFER
-    #define COMBINED_WVP_BUFFER (0)
+#define COMBINED_WVP_BUFFER (0)
 #endif // COMBINED_WVP_BUFFER
 
 #if ENABLE_VERTEX_TEXTURE
@@ -31,15 +31,15 @@ SamplerState MainSampler : register(s0);
         matrix Proj;
     }
 #else // COMBINED_WVP_BUFFER
-    cbuffer WorldBuffer : register(b0)
-    {
-        matrix World;
-    }
-    cbuffer ViewProjBuffer : register(b1)
-    {
-        matrix View;
-        matrix Proj;
-    }
+cbuffer WorldBuffer : register(b0)
+{
+    matrix World;
+}
+cbuffer ViewProjBuffer : register(b1)
+{
+    matrix View;
+    matrix Proj;
+}
 #endif // COMBINED_WVP_BUFFER
 #endif // ENABLE_WVP_TRANSFORM
 

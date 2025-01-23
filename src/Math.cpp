@@ -4,20 +4,20 @@ namespace Kraken
 {
     v2f operator+(const v2f& Left, const v2f& Right)
     {
-        return v2f{ Left.X + Right.X, Left.Y + Right.Y};
+        return v2f{ Left.X + Right.X, Left.Y + Right.Y };
     }
 
-	v2f operator-(const v2f& Left, const v2f& Right)
+    v2f operator-(const v2f& Left, const v2f& Right)
     {
         return v2f{ Left.X - Right.X, Left.Y - Right.Y };
     }
 
-	v3f operator+(const v3f& Left, const v3f& Right)
+    v3f operator+(const v3f& Left, const v3f& Right)
     {
-        return v3f{ Left.X + Right.X, Left.Y + Right.Y, Left.Z + Right.Z};
+        return v3f{ Left.X + Right.X, Left.Y + Right.Y, Left.Z + Right.Z };
     }
 
-	v3f operator-(const v3f& Left, const v3f& Right)
+    v3f operator-(const v3f& Left, const v3f& Right)
     {
         return v3f{ Left.X - Right.X, Left.Y - Right.Y, Left.Z - Right.Z };
 
@@ -35,24 +35,24 @@ namespace Kraken
 
     }
 
-	float Length(const v2f& vIn)
+    float Length(const v2f& vIn)
     {
         return sqrtf(vIn.X * vIn.X + vIn.Y * vIn.Y);
     }
 
-	float Length(const v3f& vIn)
+    float Length(const v3f& vIn)
     {
         return sqrtf(vIn.X * vIn.X + vIn.Y * vIn.Y + vIn.Z * vIn.Z);
     }
 
-	v2f Norm(const v2f& vIn)
+    v2f Norm(const v2f& vIn)
     {
         float fInLength = Length(vIn);
         // TODO(CKA): Protect against divide-by-zero
         return v2f{ vIn.X / fInLength, vIn.Y / fInLength };
     }
 
-	v3f Norm(const v3f& vIn)
+    v3f Norm(const v3f& vIn)
     {
         float fInLength = Length(vIn);
         // TODO(CKA): Protect against divide-by-zero
@@ -91,7 +91,7 @@ namespace Kraken
         return Result;
     }
 
-	m3f Mult(const m3f& Left, const m3f& Right)
+    m3f Mult(const m3f& Left, const m3f& Right)
     {
         m3f Result;
         Result.r0.X = Left.r0.X * Right.r0.X + Left.r0.Y * Right.r1.X + Left.r0.Z * Right.r2.X;
@@ -106,7 +106,7 @@ namespace Kraken
         return Result;
     }
 
-	m4f Mult(const m4f& Left, const m4f& Right)
+    m4f Mult(const m4f& Left, const m4f& Right)
     {
         m4f Result;
         Result.r0.X = Left.r0.X * Right.r0.X + Left.r0.Y * Right.r1.X + Left.r0.Z * Right.r2.X + Left.r0.W * Right.r3.X;
