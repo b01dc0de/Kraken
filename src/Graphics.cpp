@@ -521,9 +521,10 @@ namespace Kraken
 
         if (DX_Device)
         {
-            // TODO:
-            //  - GetDebugInterface
-            //  - ReportLiveObjects
+            ID3D11Debug* DX_Debug = nullptr;
+            DX_Device->QueryInterface(UID_HELPER(ID3D11Debug, DX_Debug));
+            if (DX_Debug) { DX_Debug->ReportLiveDeviceObjects(D3D11_RLDO_IGNORE_INTERNAL); }
+            SAFE_RELEASE(DX_Debug);
         }
         SAFE_RELEASE(DX_Device);
     }
