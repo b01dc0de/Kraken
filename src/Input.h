@@ -27,6 +27,7 @@ namespace Kraken
         static int MouseY;
 
         static void SetMousePos(int X, int Y);
+        static void SetMouseClick(UINT MouseMsg);
     };
 }
 

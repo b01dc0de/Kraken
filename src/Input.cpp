@@ -89,4 +89,36 @@ namespace Kraken
             MouseY = OffscreenVal;
         }
     }
+
+    void MouseState::SetMouseClick(UINT MouseMsg)
+    {
+        bool bOnscreenX = 0 < MouseX && MouseX < WinResX;
+        bool bOnscreenY = 0 < MouseY && MouseY < WinResY;
+
+        if (bOnscreenX && bOnscreenY)
+        {
+            switch (MouseMsg)
+            {
+                case WM_LBUTTONDOWN:
+                case WM_RBUTTONDOWN:
+                case WM_MBUTTONDOWN:
+                {
+                } break;
+                case WM_LBUTTONUP:
+                case WM_RBUTTONUP:
+                case WM_MBUTTONUP:
+                {
+                } break;
+                case WM_LBUTTONDBLCLK:
+                case WM_RBUTTONDBLCLK:
+                case WM_MBUTTONDBLCLK:
+                {
+                } break;
+                default:
+                {
+
+                } break;
+            }
+        }
+    }
 }

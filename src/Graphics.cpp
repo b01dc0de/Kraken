@@ -38,6 +38,9 @@ namespace Kraken
 
     ID3D11Buffer* DX_WVPBuffer = nullptr;
 
+    // 2D
+    ID2D1Factory* DX_2DFactory = nullptr;
+
     int CompileShaderHelper
     (
         LPCWSTR SourceFileName,
@@ -409,19 +412,38 @@ namespace Kraken
             if (PSCodeBlob) { PSCodeBlob->Release(); }
         }
 
+        // DirectWrite / Direct2D
+        {
+            Result = D2D1CreateFactory(
+                D2D1_FACTORY_TYPE_SINGLE_THREADED,
+                &DX_2DFactory
+            );
+            DXCHECK(Result);
+
+            RECT rc;
+            GetClientRect(hWindow, &rc);
+
+            LONG CanvasWidth = rc.right - rc.left;
+            LONG CanvasHeight = rc.bottom - rc.top;
+            ID2D1HwndRenderTarget* DX_2DHwndRT = nullptr;
+            Result = DX_2DFactory->CreateHwndRenderTarget(
+                D2D1::RenderTargetProperties(),
+                D2D1::HwndRenderTargetProperties(
+                    hWindow,
+                    D2D1::SizeU(
+                    CanvasWidth,
+                    CanvasHeight)),
+                &DX_2DHwndRT
+            );
+        }
+
         return Result;
     }
 
     void UpdateAndDraw()
     {
         UINT Offset = 0;
-        m4f IdentityMatrix =
-        {
-            { 1.0f, 0.0f, 0.0f, 0.0f },
-            { 0.0f, 1.0f, 0.0f, 0.0f },
-            { 0.0f, 0.0f, 1.0f, 0.0f },
-            { 0.0f, 0.0f, 0.0f, 1.0f },
-        };
+        m4f IdentityMatrix = m4f::Identity();
         Camera OrthoCam;
         OrthoCam.Ortho(WinResX, WinResY, 1.0f);
         m4f World = m4f::Scale(v3f{ WinResX / 4.0f, WinResY / 4.0f, 1.0f });

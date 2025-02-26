@@ -76,6 +76,18 @@ namespace Kraken
             {
                 MouseState::SetMousePos(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
             } break;
+            case WM_LBUTTONDOWN:
+            case WM_LBUTTONUP:
+            case WM_LBUTTONDBLCLK:
+            case WM_RBUTTONDOWN:
+            case WM_RBUTTONUP:
+            case WM_RBUTTONDBLCLK:
+            case WM_MBUTTONDOWN:
+            case WM_MBUTTONUP:
+            case WM_MBUTTONDBLCLK:
+            {
+                MouseState::SetMouseClick(uMsg);
+            } break;
             default:
             {
                 Result = DefWindowProc(hwnd, uMsg, wParam, lParam);
